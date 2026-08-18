@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+   <script>
+    // Ninja-Knopf-System
+    window.NINJA = {
+        ask() {
+            const btn = document.getElementById('askBtn');
+            if (btn) btn.click();
+        },
+        reset() {
+            const btn = document.getElementById('resetBtn');
+            if (btn) btn.click();
+        }
+    };
+
+    // Globale Hotkeys
+    document.addEventListener('keydown', e => {
+        if (e.key === 'q') NINJA.ask();     // q = Frage stellen
+        if (e.key === 'r') NINJA.reset();   // r = Reset
+    });
+</script>
+
+    
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orakel · SYNCCORE · 243</title>
