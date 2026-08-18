@@ -41,3 +41,18 @@ const argeupheria = {
         return { absorbed: input, layer: "argeupheria" };
     }
 };
+// Wenn du QI/IQQ mit deinem 81-Finder verbinden willst:
+import { RESPO_81_FINDER } from "./RESPO_81_FINDER.js";
+import { QI_IQQ } from "./QI_IQQ_REFERENZ.js";
+
+function syncQiIqqWith81(input, stationData) {
+  const qiResult = QI_IQQ.connectTo243(input);
+  const findResult = RESPO_81_FINDER.evaluate(input, stationData);
+
+  return {
+    qi: qiResult,
+    find81: findResult,
+    sync: "QI/IQQ ↔ 81 ↔ 243 ↔ RESPO_WHIRL",
+    status: qiResult.is243 ? "VOLLE RESONANZ" : "offene Resonanz"
+  };
+}
