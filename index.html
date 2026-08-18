@@ -1,25 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-   <script>
-    // Ninja-Knopf-System
-    window.NINJA = {
-        ask() {
-            const btn = document.getElementById('askBtn');
-            if (btn) btn.click();
-        },
-        reset() {
-            const btn = document.getElementById('resetBtn');
-            if (btn) btn.click();
-        }
-    };
-
-    // Globale Hotkeys
-    document.addEventListener('keydown', e => {
-        if (e.key === 'q') NINJA.ask();     // q = Frage stellen
-        if (e.key === 'r') NINJA.reset();   // r = Reset
-    });
-</script>
+  
 
     
     
@@ -431,8 +413,25 @@ document.getElementById("reset").onclick = () => {
     const result = ORAKEL_SET();
     output.textContent = JSON.stringify(result, null, 2);
 };
-</script>
 
+    // Ninja-Knopf-System
+    window.NINJA = {
+        ask() {
+            const btn = document.getElementById('askBtn');
+            if (btn) btn.click();
+        },
+        reset() {
+            const btn = document.getElementById('resetBtn');
+            if (btn) btn.click();
+        }
+    };
+
+    // Globale Hotkeys
+    document.addEventListener('keydown', e => {
+        if (e.key === 'q') NINJA.ask();     // q = Frage stellen
+        if (e.key === 'r') NINJA.reset();   // r = Reset
+    });
+</script>
 
 
 </body>
