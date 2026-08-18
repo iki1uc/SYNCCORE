@@ -289,102 +289,82 @@
             "./QI_IQQ_REFERENZ.js": "./QI_IQQ_REFERENZ.js"
         }
     }
-</script>
-
 <script type="module">
-    // ─── Importe ────────────────────────────────────────────────
-    import { SET, lerSETI, argeupheria, syncQiIqqWith81 } from './SET.js';
+    import { SET, syncQiIqqWith81 } from './SET.js';
+    import { RESPO_81_FINDER } from './RESPO_81_FINDER.js';
 
-    // ─── DOM-Referenzen ────────────────────────────────────────
-    const oracleOutput = document.getElementById('oracleOutput');
-    const oracleInput = document.getElementById('oracleInput');
-    const askBtn = document.getElementById('askBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const hallCell = document.getElementById('hallCell');
+    const out = document.getElementById('oracleOutput');
+    const inp = document.getElementById('oracleInput');
+    const hall = document.getElementById('hallCell');
 
-    // ─── Hilfsfunktionen ──────────────────────────────────────
-
-    // Setzt die Matrix visuell zurück (nur zur Anzeige)
+    // ─────────────────────────────────────────────
+    // SET-Matrix anzeigen
+    // ─────────────────────────────────────────────
     function renderSet() {
-        const cells = document.querySelectorAll('.set-cell');
         const flat = SET.base.flat();
-        cells.forEach((cell, index) => {
-            if (index < flat.length) {
-                cell.textContent = flat[index];
-            }
+        document.querySelectorAll('.set-cell').forEach((cell, i) => {
+            cell.textContent = flat[i];
         });
-        // hall hervorheben
-        hallCell.textContent = SET.hall(); // sollte 'e' sein
+        hall.textContent = SET.hall();
     }
 
-    // Formatiert das Orakel-Ergebnis für die Anzeige
-    function formatOracleResult(result) {
-        if (!result) return '⏳ Keine Antwort.';
+    // ─────────────────────────────────────────────
+    // Text → numerische Essenz
+    // ─────────────────────────────────────────────
+    const essence = v =>
+        isNaN(v) ? [...v].reduce((a, c) => a + c.charCodeAt(0), 0) : Number(v);
 
-        const lines = [];
-        lines.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
+    // ─────────────────────────────────────────────
+    // Ausgabe formatieren
+    // ─────────────────────────────────────────────
+    function fmt(r) {
+        if (!r) return '// keine Antwort';
 
-        // QI/IQQ-Teil
-        if (result.qi) {
-            lines.push(`├─ QI/IQQ: ${result.qi.path || 'offen'}`);
-            if (result.qi.is243 !== undefined) {
-                lines.push(`│  └─ 243-Status: ${result.qi.is243 ? '✅ erreicht' : '⏳ offen'}`);
+        const L = [];
+        L.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
+
+        if (r.qi) {
+            L.push(`├─ QI/IQQ: ${r.qi.path || 'offen'}`);
+            L.push(`│  └─ 243: ${r.qi.is243 ? 'erreicht' : 'offen'}`);
+        }
+
+        const f = r.find81;
+        if (f) {
+            L.push(`├─ 81-Findung: ${f.find81.count}/3`);
+            if (f.find81.is243) L.push(`│  └─ ${f.find81.status}`);
+
+            L.push(`├─ Station: ${f.station.station} → ${f.station.percent}%`);
+            L.push(`│  └─ ${f.station.status}`);
+
+            if (f.beneficial.length) {
+                L.push(`├─ Begünstigung:`);
+                f.beneficial.forEach(b => L.push(`│  • ${b}`));
             }
         }
 
-        // 81-Finder-Teil
-        if (result.find81) {
-            const f = result.find81;
-            lines.push(`├─ 81-Findung: ${f.find81?.count || 0} / 3`);
-            if (f.find81?.is243) {
-                lines.push(`│  └─ ${f.find81.status || '243 erreicht'}`);
-            }
-            if (f.station) {
-                lines.push(`├─ Station: ${f.station.station || '?'} → ${f.station.percent || 0}%`);
-                lines.push(`│  └─ ${f.station.status || 'unbekannt'}`);
-            }
-            if (f.beneficial && f.beneficial.length > 0) {
-                lines.push(`├─ Begünstigung:`);
-                f.beneficial.forEach(b => lines.push(`│  • ${b}`));
-            }
-        }
-
-        // Sync-Status
-        if (result.status) {
-            lines.push(`└─ Status: ${result.status}`);
-        }
-
-        // Fallback, falls nichts da ist
-        if (lines.length === 1) {
-            lines.push('└─ (keine weiteren Daten)');
-        }
-
-        return lines.join('\n');
+        L.push(`└─ Status: ${r.status || 'offen'}`);
+        return L.join('\n');
     }
 
-    // ─── Orakel-Abfrage ──────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // Hall-Resonanz
+    // ─────────────────────────────────────────────
+    function updateHall(is243) {
+        hall.style.background = is243 ? '#1e3a3a' : '#1e2a2a';
+        hall.style.color = is243 ? '#b0f0f0' : '#aadddd';
+        hall.style.borderColor = is243 ? '#4a8a8a' : '#3a5a5a';
+    }
 
-    async function askOracle() {
-        const rawInput = oracleInput.value.trim();
-        if (!rawInput) {
-            oracleOutput.textContent = '⚠️ Bitte gib eine Zahl oder Frage ein.';
-            return;
-        }
+    // ─────────────────────────────────────────────
+    // Orakel-Abfrage
+    // ─────────────────────────────────────────────
+    function ask() {
+        const raw = inp.value.trim();
+        if (!raw) return out.textContent = '⚠️ Eingabe fehlt.';
 
-        // Versuche, eine Zahl zu parsen
-        let numericInput = parseFloat(rawInput);
-        if (isNaN(numericInput)) {
-            // Falls es kein reiner Zahl ist, verwenden wir einen Hash-ähnlichen Wert
-            // oder einfach den String als Input für die QI/IQQ-Verbindung
-            // Für die Demo: wir nehmen die Länge des Strings als numerischen Ersatz.
-            numericInput = rawInput.length * 7 + 42; // eine Art "Essenz"
-            // Aber besser: wir übergeben den String direkt und lassen die Funktionen damit umgehen.
-            // Da unsere sync-Funktion aber einen numerischen Input erwartet, nehmen wir den Hash.
-            // In einer echten Implementierung könntest du hier eine sinnvolle Umwandlung einbauen.
-        }
+        const num = essence(raw);
 
-        // Simulierte Stationsdaten (aus deinem vorherigen Kontext)
-        const stationData = {
+        const station = {
             name: "SYNCCORE-Station",
             uptime: 0.91,
             signal: 0.87,
@@ -395,65 +375,37 @@
         };
 
         try {
-            // ─── KERN: Deine syncQiIqqWith81-Funktion ────────────
-            const result = syncQiIqqWith81(numericInput, stationData);
-
-            // ─── Ausgabe formatieren ─────────────────────────────
-            const formatted = formatOracleResult(result);
-            oracleOutput.textContent = formatted;
-
-            // ─── SET hall aktualisieren (optional) ──────────────
-            // Wir nutzen das Ergebnis, um hall zu "färben"
-            if (result.find81?.find81?.is243) {
-                hallCell.style.background = '#1e3a3a';
-                hallCell.style.color = '#b0f0f0';
-                hallCell.style.borderColor = '#4a8a8a';
-            } else {
-                hallCell.style.background = '#1e2a2a';
-                hallCell.style.color = '#aadddd';
-                hallCell.style.borderColor = '#3a5a5a';
-            }
-
-        } catch (error) {
-            console.error('Orakel-Fehler:', error);
-            oracleOutput.textContent = `❌ Fehler: ${error.message || 'unbekannt'}`;
+            const r = syncQiIqqWith81(num, station);
+            out.textContent = fmt(r);
+            updateHall(r.find81?.find81?.is243);
+        } catch (e) {
+            out.textContent = `❌ Fehler: ${e.message}`;
         }
     }
 
-    // ─── Event-Listener ──────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // Events
+    // ─────────────────────────────────────────────
+    document.getElementById('askBtn').onclick = ask;
 
-    askBtn.addEventListener('click', askOracle);
-
-    resetBtn.addEventListener('click', () => {
-        oracleInput.value = '81';
-        oracleOutput.innerHTML = '<span class="meta">// zurückgesetzt …</span>';
+    document.getElementById('resetBtn').onclick = () => {
+        inp.value = '81';
+        out.innerHTML = '<span class="meta">// zurückgesetzt …</span>';
         renderSet();
-        hallCell.style.background = '#1e2a2a';
-        hallCell.style.color = '#aadddd';
-        hallCell.style.borderColor = '#3a5a5a';
+        updateHall(false);
+    };
+
+    inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') ask();
     });
 
-    // Enter-Taste im Eingabefeld
-    oracleInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            askOracle();
-        }
-    });
-
-    // ─── Initialisierung ──────────────────────────────────────
-
+    // ─────────────────────────────────────────────
+    // Init
+    // ─────────────────────────────────────────────
     renderSet();
-    oracleOutput.innerHTML = `<span class="meta">// Orakel bereit. Stelle deine Frage.</span>`;
-    hallCell.textContent = SET.hall(); // 'e'
-
-    console.log('◈ SYNCCORE · Orakel geladen');
-    console.log('SET:', SET);
-    console.log('lerSETI:', lerSETI);
-    console.log('argeupheria:', argeupheria);
-    console.log('syncQiIqqWith81:', syncQiIqqWith81);
-
+    out.innerHTML = `<span class="meta">// Orakel bereit. Stelle deine Frage.</span>`;
 </script>
+
 
 </body>
 </html>
