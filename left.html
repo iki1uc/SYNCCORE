@@ -1,1 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>left · SYNCCORE</title>
+
+    <style>
+        body {
+            background: #0f0f0f;
+            color: #e6e6e6;
+            font-family: monospace;
+            text-align: center;
+            padding-top: 18vh;
+            letter-spacing: 0.06em;
+        }
+
+        #left {
+            font-size: 2rem;
+            opacity: 0.9;
+            animation: slideLeft 3s infinite ease-in-out;
+        }
+
+        #text {
+            margin-top: 2rem;
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        @keyframes slideLeft {
+            0%   { transform: translateX(0); }
+            50%  { transform: translateX(-14px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="left">◀ left</div>
+    <div id="text">
+        Eine ruhige Verschiebung nach links.<br>
+        Kein Anfang. Kein Ende.<br>
+        Nur Haltung.<br>
+        Ein Ausgleichspunkt,<br>
+        der SYNCCORE stabil hält.
+    </div>
+
+</body>
+</html>
 
