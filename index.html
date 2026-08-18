@@ -281,30 +281,20 @@
 
 </div>
 
-<script type="importmap">
-    {
-        "imports": {
-            "./SET.js": "./SET.js",
-            "./RESPO_81_FINDER.js": "./RESPO_81_FINDER.js",
-            "./QI_IQQ_REFERENZ.js": "./QI_IQQ_REFERENZ.js"
-        }
-    }
 <script type="module">
     import { SET, syncQiIqqWith81 } from './SET.js';
     import { RESPO_81_FINDER } from './RESPO_81_FINDER.js';
 
-    const out = document.getElementById('oracleOutput');
-    const inp = document.getElementById('oracleInput');
-    const hall = document.getElementById('hallCell');
+    const out   = document.getElementById('oracleOutput');
+    const inp   = document.getElementById('oracleInput');
+    const hall  = document.getElementById('hallCell');
 
     // ─────────────────────────────────────────────
     // SET-Matrix anzeigen
     // ─────────────────────────────────────────────
     function renderSet() {
         const flat = SET.base.flat();
-        document.querySelectorAll('.set-cell').forEach((cell, i) => {
-            cell.textContent = flat[i];
-        });
+        document.querySelectorAll('.set-cell').forEach((c, i) => c.textContent = flat[i]);
         hall.textContent = SET.hall();
     }
 
@@ -312,14 +302,12 @@
     // Text → numerische Essenz
     // ─────────────────────────────────────────────
     const essence = v =>
-        isNaN(v) ? [...v].reduce((a, c) => a + c.charCodeAt(0), 0) : Number(v);
+        isNaN(v) ? [...v].reduce((a,c)=>a+c.charCodeAt(0),0) : Number(v);
 
     // ─────────────────────────────────────────────
     // Ausgabe formatieren
     // ─────────────────────────────────────────────
     function fmt(r) {
-        if (!r) return '// keine Antwort';
-
         const L = [];
         L.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
 
@@ -349,10 +337,10 @@
     // ─────────────────────────────────────────────
     // Hall-Resonanz
     // ─────────────────────────────────────────────
-    function updateHall(is243) {
-        hall.style.background = is243 ? '#1e3a3a' : '#1e2a2a';
-        hall.style.color = is243 ? '#b0f0f0' : '#aadddd';
-        hall.style.borderColor = is243 ? '#4a8a8a' : '#3a5a5a';
+    function hallResonance(is243) {
+        hall.style.background   = is243 ? '#1e3a3a' : '#1e2a2a';
+        hall.style.color        = is243 ? '#b0f0f0' : '#aadddd';
+        hall.style.borderColor  = is243 ? '#4a8a8a' : '#3a5a5a';
     }
 
     // ─────────────────────────────────────────────
@@ -377,7 +365,7 @@
         try {
             const r = syncQiIqqWith81(num, station);
             out.textContent = fmt(r);
-            updateHall(r.find81?.find81?.is243);
+            hallResonance(r.find81?.find81?.is243);
         } catch (e) {
             out.textContent = `❌ Fehler: ${e.message}`;
         }
@@ -392,7 +380,7 @@
         inp.value = '81';
         out.innerHTML = '<span class="meta">// zurückgesetzt …</span>';
         renderSet();
-        updateHall(false);
+        hallResonance(false);
     };
 
     inp.addEventListener('keydown', e => {
@@ -405,6 +393,7 @@
     renderSet();
     out.innerHTML = `<span class="meta">// Orakel bereit. Stelle deine Frage.</span>`;
 </script>
+
 
 
 </body>
