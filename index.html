@@ -2,53 +2,458 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>SYNCCORE · Slide · Shuffle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orakel · SYNCCORE · 243</title>
 
     <style>
+        /* ─── Dein SYNCCORE-Stil ─── */
         body {
-            background: #0f0f0f;
-            color: #e6e6e6;
-            font-family: monospace;
+            background: #0a0a0a;
+            color: #c0c0c0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .oracle-container {
+            max-width: 780px;
+            width: 100%;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 30px 30px 40px;
+            box-shadow: 0 0 40px rgba(0, 255, 200, 0.03);
+            transition: border-color 0.3s;
+        }
+
+        .oracle-container:hover {
+            border-color: #3a5a5a;
+        }
+
+        h1 {
+            font-weight: 300;
+            font-size: 1.8rem;
+            letter-spacing: 0.15em;
+            color: #d0d0d0;
             text-align: center;
-            padding-top: 14vh;
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid #222;
+            padding-bottom: 0.75rem;
+        }
+
+        h1 small {
+            font-size: 0.8rem;
+            color: #666;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .status-line {
+            text-align: center;
+            color: #558;
+            font-size: 0.8rem;
             letter-spacing: 0.06em;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 0.6rem;
         }
 
-        #slide {
-            font-size: 2rem;
-            opacity: 0.9;
-            animation: slide 3s infinite ease-in-out;
+        /* ─── SET-Matrix visuell ─── */
+        .set-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            max-width: 210px;
+            margin: 1.2rem auto 1.8rem auto;
         }
 
-        #shuffle {
-            font-size: 1.2rem;
-            opacity: 0.7;
-            margin-top: 2rem;
-            animation: shuffle 2.4s infinite ease-in-out;
+        .set-cell {
+            background: #181818;
+            color: #6a8a8a;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            border: 1px solid #252525;
+            transition: background 0.2s, color 0.2s;
         }
 
-        @keyframes slide {
-            0%   { transform: translateY(0); }
-            25%  { transform: translateY(-12px); }
-            50%  { transform: translateY(12px); }
-            75%  { transform: translateY(-6px); }
-            100% { transform: translateY(0); }
+        .set-cell.hall {
+            background: #1e2a2a;
+            color: #aadddd;
+            border-color: #3a5a5a;
+            box-shadow: 0 0 12px rgba(0, 200, 180, 0.05);
         }
 
-        @keyframes shuffle {
-            0%   { transform: translateX(0); }
-            25%  { transform: translateX(10px); }
-            50%  { transform: translateX(-10px); }
-            75%  { transform: translateX(6px); }
-            100% { transform: translateX(0); }
+        /* ─── Eingabe ─── */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 1.8rem 0 1.8rem 0;
+        }
+
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-row label {
+            color: #889;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+
+        .input-row input {
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 10px 14px;
+            color: #d0d0d0;
+            font-family: inherit;
+            font-size: 0.95rem;
+            width: 200px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .input-row input:focus {
+            border-color: #4a7a7a;
+            box-shadow: 0 0 14px rgba(0, 200, 180, 0.06);
+        }
+
+        .input-row input::placeholder {
+            color: #3a4a4a;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            background: #1a1a1a;
+            border: 1px solid #2a3a3a;
+            border-radius: 6px;
+            padding: 10px 22px;
+            color: #b0c0c0;
+            font-family: inherit;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .btn:hover {
+            background: #222;
+            border-color: #3a6a6a;
+            color: #d0f0f0;
+        }
+
+        .btn:active {
+            background: #1a2a2a;
+        }
+
+        /* ─── Orakel-Ausgabe ─── */
+        .oracle-output {
+            background: #0c0c0c;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin: 1.4rem 0 0.8rem 0;
+            min-height: 100px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #b0b8b8;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .oracle-output .highlight {
+            color: #aadddd;
+            font-weight: 400;
+        }
+
+        .oracle-output .meta {
+            color: #6a7a7a;
+            font-size: 0.75rem;
+        }
+
+        .oracle-output .status-ok {
+            color: #7aaa8a;
+        }
+
+        .oracle-output .status-open {
+            color: #aab07a;
+        }
+
+        .footnote {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #3a4a4a;
+            letter-spacing: 0.06em;
+            margin-top: 1.8rem;
+            border-top: 1px solid #161616;
+            padding-top: 1rem;
+        }
+
+        .footnote span {
+            color: #4a6a6a;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .oracle-container {
+                padding: 18px 16px 28px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .input-row input {
+                width: 100%;
+            }
+            .set-grid {
+                max-width: 150px;
+            }
+            .set-cell {
+                font-size: 0.9rem;
+                padding: 6px 0;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="slide">lerSETI → SETIler → argeupheria</div>
-    <div id="shuffle">Domino · Tanz · Rhythmus · Wette</div>
+<div class="oracle-container">
+
+    <h1>
+        ◈ ORAKEL · 243
+        <small>SYNCCORE · SET · QI/IQQ · RESPO_81</small>
+    </h1>
+
+    <div class="status-line">
+        〈 lerSETI · argeupheria · hall 〉
+    </div>
+
+    <!-- ─── SET-Matrix ─── -->
+    <div class="set-grid" id="setGrid">
+        <div class="set-cell">a</div>
+        <div class="set-cell">b</div>
+        <div class="set-cell">c</div>
+        <div class="set-cell">d</div>
+        <div class="set-cell hall" id="hallCell">e</div>
+        <div class="set-cell">f</div>
+        <div class="set-cell">g</div>
+        <div class="set-cell">h</div>
+        <div class="set-cell">i</div>
+    </div>
+
+    <!-- ─── Eingabe ─── -->
+    <div class="input-area">
+        <div class="input-row">
+            <label for="oracleInput">◈ Frage / Zahl</label>
+            <input type="text" id="oracleInput" placeholder="z.B. 81, 243, oder deine Frage" value="81">
+        </div>
+        <div class="input-row" style="justify-content: center; gap: 12px;">
+            <button class="btn" id="askBtn">↻ Orakel befragen</button>
+            <button class="btn" id="resetBtn">⟲ SET zurücksetzen</button>
+        </div>
+    </div>
+
+    <!-- ─── Orakel-Ausgabe ─── -->
+    <div class="oracle-output" id="oracleOutput">
+        <span class="meta">// bereit …</span>
+    </div>
+
+    <div class="footnote">
+        <span>QI/IQQ</span> · <span>81</span> · <span>243</span> · <span>RESPO_WHIRL</span>
+    </div>
+
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "./SET.js": "./SET.js",
+            "./RESPO_81_FINDER.js": "./RESPO_81_FINDER.js",
+            "./QI_IQQ_REFERENZ.js": "./QI_IQQ_REFERENZ.js"
+        }
+    }
+</script>
+
+<script type="module">
+    // ─── Importe ────────────────────────────────────────────────
+    import { SET, lerSETI, argeupheria, syncQiIqqWith81 } from './SET.js';
+
+    // ─── DOM-Referenzen ────────────────────────────────────────
+    const oracleOutput = document.getElementById('oracleOutput');
+    const oracleInput = document.getElementById('oracleInput');
+    const askBtn = document.getElementById('askBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const hallCell = document.getElementById('hallCell');
+
+    // ─── Hilfsfunktionen ──────────────────────────────────────
+
+    // Setzt die Matrix visuell zurück (nur zur Anzeige)
+    function renderSet() {
+        const cells = document.querySelectorAll('.set-cell');
+        const flat = SET.base.flat();
+        cells.forEach((cell, index) => {
+            if (index < flat.length) {
+                cell.textContent = flat[index];
+            }
+        });
+        // hall hervorheben
+        hallCell.textContent = SET.hall(); // sollte 'e' sein
+    }
+
+    // Formatiert das Orakel-Ergebnis für die Anzeige
+    function formatOracleResult(result) {
+        if (!result) return '⏳ Keine Antwort.';
+
+        const lines = [];
+        lines.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
+
+        // QI/IQQ-Teil
+        if (result.qi) {
+            lines.push(`├─ QI/IQQ: ${result.qi.path || 'offen'}`);
+            if (result.qi.is243 !== undefined) {
+                lines.push(`│  └─ 243-Status: ${result.qi.is243 ? '✅ erreicht' : '⏳ offen'}`);
+            }
+        }
+
+        // 81-Finder-Teil
+        if (result.find81) {
+            const f = result.find81;
+            lines.push(`├─ 81-Findung: ${f.find81?.count || 0} / 3`);
+            if (f.find81?.is243) {
+                lines.push(`│  └─ ${f.find81.status || '243 erreicht'}`);
+            }
+            if (f.station) {
+                lines.push(`├─ Station: ${f.station.station || '?'} → ${f.station.percent || 0}%`);
+                lines.push(`│  └─ ${f.station.status || 'unbekannt'}`);
+            }
+            if (f.beneficial && f.beneficial.length > 0) {
+                lines.push(`├─ Begünstigung:`);
+                f.beneficial.forEach(b => lines.push(`│  • ${b}`));
+            }
+        }
+
+        // Sync-Status
+        if (result.status) {
+            lines.push(`└─ Status: ${result.status}`);
+        }
+
+        // Fallback, falls nichts da ist
+        if (lines.length === 1) {
+            lines.push('└─ (keine weiteren Daten)');
+        }
+
+        return lines.join('\n');
+    }
+
+    // ─── Orakel-Abfrage ──────────────────────────────────────
+
+    async function askOracle() {
+        const rawInput = oracleInput.value.trim();
+        if (!rawInput) {
+            oracleOutput.textContent = '⚠️ Bitte gib eine Zahl oder Frage ein.';
+            return;
+        }
+
+        // Versuche, eine Zahl zu parsen
+        let numericInput = parseFloat(rawInput);
+        if (isNaN(numericInput)) {
+            // Falls es kein reiner Zahl ist, verwenden wir einen Hash-ähnlichen Wert
+            // oder einfach den String als Input für die QI/IQQ-Verbindung
+            // Für die Demo: wir nehmen die Länge des Strings als numerischen Ersatz.
+            numericInput = rawInput.length * 7 + 42; // eine Art "Essenz"
+            // Aber besser: wir übergeben den String direkt und lassen die Funktionen damit umgehen.
+            // Da unsere sync-Funktion aber einen numerischen Input erwartet, nehmen wir den Hash.
+            // In einer echten Implementierung könntest du hier eine sinnvolle Umwandlung einbauen.
+        }
+
+        // Simulierte Stationsdaten (aus deinem vorherigen Kontext)
+        const stationData = {
+            name: "SYNCCORE-Station",
+            uptime: 0.91,
+            signal: 0.87,
+            response: 0.94,
+            sync: 0.79,
+            load: 0.33,
+            errors: 1
+        };
+
+        try {
+            // ─── KERN: Deine syncQiIqqWith81-Funktion ────────────
+            const result = syncQiIqqWith81(numericInput, stationData);
+
+            // ─── Ausgabe formatieren ─────────────────────────────
+            const formatted = formatOracleResult(result);
+            oracleOutput.textContent = formatted;
+
+            // ─── SET hall aktualisieren (optional) ──────────────
+            // Wir nutzen das Ergebnis, um hall zu "färben"
+            if (result.find81?.find81?.is243) {
+                hallCell.style.background = '#1e3a3a';
+                hallCell.style.color = '#b0f0f0';
+                hallCell.style.borderColor = '#4a8a8a';
+            } else {
+                hallCell.style.background = '#1e2a2a';
+                hallCell.style.color = '#aadddd';
+                hallCell.style.borderColor = '#3a5a5a';
+            }
+
+        } catch (error) {
+            console.error('Orakel-Fehler:', error);
+            oracleOutput.textContent = `❌ Fehler: ${error.message || 'unbekannt'}`;
+        }
+    }
+
+    // ─── Event-Listener ──────────────────────────────────────
+
+    askBtn.addEventListener('click', askOracle);
+
+    resetBtn.addEventListener('click', () => {
+        oracleInput.value = '81';
+        oracleOutput.innerHTML = '<span class="meta">// zurückgesetzt …</span>';
+        renderSet();
+        hallCell.style.background = '#1e2a2a';
+        hallCell.style.color = '#aadddd';
+        hallCell.style.borderColor = '#3a5a5a';
+    });
+
+    // Enter-Taste im Eingabefeld
+    oracleInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            askOracle();
+        }
+    });
+
+    // ─── Initialisierung ──────────────────────────────────────
+
+    renderSet();
+    oracleOutput.innerHTML = `<span class="meta">// Orakel bereit. Stelle deine Frage.</span>`;
+    hallCell.textContent = SET.hall(); // 'e'
+
+    console.log('◈ SYNCCORE · Orakel geladen');
+    console.log('SET:', SET);
+    console.log('lerSETI:', lerSETI);
+    console.log('argeupheria:', argeupheria);
+    console.log('syncQiIqqWith81:', syncQiIqqWith81);
+
+</script>
 
 </body>
 </html>
