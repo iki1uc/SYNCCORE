@@ -1,253 +1,134 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  
-
-    
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orakel · SYNCCORE · 243</title>
-
-    <style>
-        /* ─── Dein SYNCCORE-Stil ─── */
-        body {
-            background: #0a0a0a;
-            color: #c0c0c0;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .oracle-container {
-            max-width: 780px;
-            width: 100%;
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 30px 30px 40px;
-            box-shadow: 0 0 40px rgba(0, 255, 200, 0.03);
-            transition: border-color 0.3s;
-        }
-
-        .oracle-container:hover {
-            border-color: #3a5a5a;
-        }
-
-        h1 {
-            font-weight: 300;
-            font-size: 1.8rem;
-            letter-spacing: 0.15em;
-            color: #d0d0d0;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 0.25rem;
-            border-bottom: 1px solid #222;
-            padding-bottom: 0.75rem;
-        }
-
-        h1 small {
-            font-size: 0.8rem;
-            color: #666;
-            letter-spacing: 0.1em;
-            display: block;
-            margin-top: 4px;
-        }
-
-        .status-line {
-            text-align: center;
-            color: #558;
-            font-size: 0.8rem;
-            letter-spacing: 0.06em;
-            margin-bottom: 1.8rem;
-            border-bottom: 1px solid #1a1a1a;
-            padding-bottom: 0.6rem;
-        }
-
-        /* ─── SET-Matrix visuell ─── */
-        .set-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            max-width: 210px;
-            margin: 1.2rem auto 1.8rem auto;
-        }
-
-        .set-cell {
-            background: #181818;
-            color: #6a8a8a;
-            text-align: center;
-            padding: 10px 0;
-            border-radius: 4px;
-            font-size: 1.1rem;
-            font-weight: 300;
-            letter-spacing: 0.08em;
-            border: 1px solid #252525;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .set-cell.hall {
-            background: #1e2a2a;
-            color: #aadddd;
-            border-color: #3a5a5a;
-            box-shadow: 0 0 12px rgba(0, 200, 180, 0.05);
-        }
-
-        /* ─── Eingabe ─── */
-        .input-area {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 1.8rem 0 1.8rem 0;
-        }
-
-        .input-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .input-row label {
-            color: #889;
-            font-size: 0.85rem;
-            letter-spacing: 0.04em;
-        }
-
-        .input-row input {
-            background: #151515;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            padding: 10px 14px;
-            color: #d0d0d0;
-            font-family: inherit;
-            font-size: 0.95rem;
-            width: 200px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-        }
-
-        .input-row input:focus {
-            border-color: #4a7a7a;
-            box-shadow: 0 0 14px rgba(0, 200, 180, 0.06);
-        }
-
-        .input-row input::placeholder {
-            color: #3a4a4a;
-            font-size: 0.8rem;
-        }
-
-        .btn {
-            background: #1a1a1a;
-            border: 1px solid #2a3a3a;
-            border-radius: 6px;
-            padding: 10px 22px;
-            color: #b0c0c0;
-            font-family: inherit;
-            font-size: 0.9rem;
-            letter-spacing: 0.08em;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, color 0.2s;
-        }
-
-        .btn:hover {
-            background: #222;
-            border-color: #3a6a6a;
-            color: #d0f0f0;
-        }
-
-        .btn:active {
-            background: #1a2a2a;
-        }
-
-        /* ─── Orakel-Ausgabe ─── */
-        .oracle-output {
-            background: #0c0c0c;
-            border: 1px solid #1e1e1e;
-            border-radius: 8px;
-            padding: 18px 20px;
-            margin: 1.4rem 0 0.8rem 0;
-            min-height: 100px;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-word;
-            color: #b0b8b8;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-
-        .oracle-output .highlight {
-            color: #aadddd;
-            font-weight: 400;
-        }
-
-        .oracle-output .meta {
-            color: #6a7a7a;
-            font-size: 0.75rem;
-        }
-
-        .oracle-output .status-ok {
-            color: #7aaa8a;
-        }
-
-        .oracle-output .status-open {
-            color: #aab07a;
-        }
-
-        .footnote {
-            text-align: center;
-            font-size: 0.65rem;
-            color: #3a4a4a;
-            letter-spacing: 0.06em;
-            margin-top: 1.8rem;
-            border-top: 1px solid #161616;
-            padding-top: 1rem;
-        }
-
-        .footnote span {
-            color: #4a6a6a;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 480px) {
-            .oracle-container {
-                padding: 18px 16px 28px;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            .input-row input {
-                width: 100%;
-            }
-            .set-grid {
-                max-width: 150px;
-            }
-            .set-cell {
-                font-size: 0.9rem;
-                padding: 6px 0;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYNCCORE · Orakel · Raum</title>
+<style>
+/* ─── Dein Stil ─── */
+body {
+    background: #0a0a0a;
+    color: #c0c0c0;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+.oracle-container {
+    max-width: 780px;
+    width: 100%;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 30px 30px 40px;
+}
+h1 {
+    font-weight: 300;
+    font-size: 1.8rem;
+    letter-spacing: 0.15em;
+    color: #d0d0d0;
+    text-align: center;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.75rem;
+}
+h1 small {
+    font-size: 0.8rem;
+    color: #666;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 4px;
+}
+.set-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    max-width: 210px;
+    margin: 1.2rem auto 1.8rem auto;
+}
+.set-cell {
+    background: #181818;
+    color: #6a8a8a;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #252525;
+}
+.set-cell.hall {
+    background: #1e2a2a;
+    color: #aadddd;
+    border-color: #3a5a5a;
+}
+.input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.8rem 0;
+}
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.input-row input {
+    background: #151515;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #d0d0d0;
+    font-family: inherit;
+    font-size: 0.95rem;
+    width: 200px;
+    outline: none;
+}
+.btn {
+    background: #1a1a1a;
+    border: 1px solid #2a3a3a;
+    border-radius: 6px;
+    padding: 10px 22px;
+    color: #b0c0c0;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.btn:hover {
+    background: #222;
+    border-color: #3a6a6a;
+    color: #d0f0f0;
+}
+.oracle-output {
+    background: #0c0c0c;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 18px 20px;
+    min-height: 100px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: #b0b8b8;
+}
+.footnote {
+    text-align: center;
+    font-size: 0.65rem;
+    color: #3a4a4a;
+    margin-top: 1.8rem;
+    border-top: 1px solid #161616;
+    padding-top: 1rem;
+}
+</style>
 </head>
-
 <body>
 
 <div class="oracle-container">
 
     <h1>
-        ◈ ORAKEL · 243
-        <small>SYNCCORE · SET · QI/IQQ · RESPO_81</small>
+        ◈ SYNCCORE · ORAKEL
+        <small>SET · QI/IQQ · 81 · 243</small>
     </h1>
-
-    <div class="status-line">
-        〈 lerSETI · argeupheria · hall 〉
-    </div>
 
     <!-- ─── SET-Matrix ─── -->
     <div class="set-grid" id="setGrid">
@@ -268,7 +149,7 @@
             <label for="oracleInput">◈ Frage / Zahl</label>
             <input type="text" id="oracleInput" placeholder="z.B. 81, 243, oder deine Frage" value="81">
         </div>
-        <div class="input-row" style="justify-content: center; gap: 12px;">
+        <div class="input-row">
             <button class="btn" id="askBtn">↻ Orakel befragen</button>
             <button class="btn" id="resetBtn">⟲ SET zurücksetzen</button>
         </div>
@@ -276,163 +157,191 @@
 
     <!-- ─── Orakel-Ausgabe ─── -->
     <div class="oracle-output" id="oracleOutput">
-        <span class="meta">// bereit …</span>
+        <span style="color:#6a7a7a;">// bereit …</span>
     </div>
 
     <div class="footnote">
-        <span>QI/IQQ</span> · <span>81</span> · <span>243</span> · <span>RESPO_WHIRL</span>
+        QI/IQQ · 81 · 243 · RESPO_WHIRL
     </div>
 
 </div>
 
-<script type="module">
-    import { SET, syncQiIqqWith81 } from './SET.js';
-    import { RESPO_81_FINDER } from './RESPO_81_FINDER.js';
+<script>
+// ============================================================
+// DEIN SYSTEM – SO WIE ES IST
+// KEINE ENGINE – NUR EINE FRAGE UND EINE ANTWORT
+// ============================================================
 
-    const out   = document.getElementById('oracleOutput');
-    const inp   = document.getElementById('oracleInput');
-    const hall  = document.getElementById('hallCell');
-
-    // ─────────────────────────────────────────────
-    // SET-Matrix anzeigen
-    // ─────────────────────────────────────────────
-    function renderSet() {
-        const flat = SET.base.flat();
-        document.querySelectorAll('.set-cell').forEach((c, i) => c.textContent = flat[i]);
-        hall.textContent = SET.hall();
+// ─── SET ───
+const SET = {
+    base: [
+        ["a","b","c"],
+        ["d","e","f"],
+        ["g","h","i"]
+    ],
+    hall() {
+        return this.base[1][1];
     }
+};
 
-    // ─────────────────────────────────────────────
-    // Text → numerische Essenz
-    // ─────────────────────────────────────────────
-    const essence = v =>
-        isNaN(v) ? [...v].reduce((a,c)=>a+c.charCodeAt(0),0) : Number(v);
+// ─── QI/IQQ ───
+const QI_IQQ = {
+    QI: { definition: "fließende Lebensenergie", state: "fluid" },
+    IQQ: { definition: "infinite Quellen-Frage", state: "offen" },
+    connectTo243(qiInput) {
+        const root = Math.floor((qiInput * 243) / 100);
+        const is243 = root === 243 || root % 243 === 0;
+        return {
+            qiInput,
+            root,
+            is243,
+            path: is243 ? "QI → 243 → RESPO_WHIRL" : "QI → IQQ → offene Frage"
+        };
+    }
+};
 
-    // ─────────────────────────────────────────────
-    // Ausgabe formatieren
-    // ─────────────────────────────────────────────
-    function fmt(r) {
-        const L = [];
-        L.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
-
-        if (r.qi) {
-            L.push(`├─ QI/IQQ: ${r.qi.path || 'offen'}`);
-            L.push(`│  └─ 243: ${r.qi.is243 ? 'erreicht' : 'offen'}`);
-        }
-
-        const f = r.find81;
-        if (f) {
-            L.push(`├─ 81-Findung: ${f.find81.count}/3`);
-            if (f.find81.is243) L.push(`│  └─ ${f.find81.status}`);
-
-            L.push(`├─ Station: ${f.station.station} → ${f.station.percent}%`);
-            L.push(`│  └─ ${f.station.status}`);
-
-            if (f.beneficial.length) {
-                L.push(`├─ Begünstigung:`);
-                f.beneficial.forEach(b => L.push(`│  • ${b}`));
+// ─── RESPO_81_FINDER ───
+const RESPO_81_FINDER = {
+    find81(input) {
+        const numbers = String(input).match(/\d+/g)?.map(Number) || [];
+        const results = [];
+        for (let i = 0; i < numbers.length; i++) {
+            for (let j = i + 1; j < numbers.length; j++) {
+                if (numbers[i] + numbers[j] === 81) {
+                    results.push({ type: "PAIR", a: numbers[i], b: numbers[j] });
+                }
+            }
+            if (numbers[i] === 81) {
+                results.push({ type: "SINGLE", value: 81 });
             }
         }
-
-        L.push(`└─ Status: ${r.status || 'offen'}`);
-        return L.join('\n');
+        if (results.length === 0) {
+            const root = Math.floor(Math.sqrt(input * input + 243) / 3);
+            if (root === 81 || root % 81 === 0) {
+                results.push({ type: "PQ_ROOT", value: root });
+            }
+        }
+        const count = results.filter(r => r.value === 81 || r.sum === 81).length;
+        return { found: results, count, is243: count >= 3 };
+    },
+    stationStatus(stationData) {
+        const data = { uptime: 0.8, signal: 0.9, response: 0.85, sync: 0.7, load: 0.5, errors: 0, ...stationData };
+        let score = data.uptime * 0.30 + data.signal * 0.20 + data.response * 0.20 + data.sync * 0.15 + (1 - data.load) * 0.10 - Math.min(data.errors * 0.05, 0.5);
+        const percent = Math.max(0, Math.min(100, Math.round(score * 100)));
+        let status = "Kritisch";
+        if (percent >= 90) status = "Exzellent";
+        else if (percent >= 75) status = "Gut";
+        else if (percent >= 50) status = "Mittel";
+        else if (percent >= 30) status = "Schwach";
+        return { station: data.name || "Unbekannt", percent, status };
+    },
+    evaluate(input, stationData) {
+        const find = this.find81(input);
+        const status = this.stationStatus(stationData);
+        const beneficial = [];
+        if (find.count >= 1) beneficial.push("81 gefunden → 243-Basis");
+        if (status.percent >= 75) beneficial.push("Stations-Qualität hoch → 243 begünstigt");
+        if (find.is243) beneficial.push("VOLLE 243 erreicht");
+        return { input, find81: find, station: status, beneficial };
     }
+};
 
-    // ─────────────────────────────────────────────
-    // Hall-Resonanz
-    // ─────────────────────────────────────────────
-    function hallResonance(is243) {
-        hall.style.background   = is243 ? '#1e3a3a' : '#1e2a2a';
-        hall.style.color        = is243 ? '#b0f0f0' : '#aadddd';
-        hall.style.borderColor  = is243 ? '#4a8a8a' : '#3a5a5a';
+// ─── syncQiIqqWith81 ───
+function syncQiIqqWith81(input, stationData) {
+    const qiResult = QI_IQQ.connectTo243(input);
+    const findResult = RESPO_81_FINDER.evaluate(input, stationData);
+    return {
+        qi: qiResult,
+        find81: findResult,
+        sync: "QI/IQQ ↔ 81 ↔ 243 ↔ RESPO_WHIRL",
+        status: qiResult.is243 ? "VOLLE RESONANZ" : "offene Resonanz"
+    };
+}
+
+// ─── DOM ───
+const out = document.getElementById('oracleOutput');
+const inp = document.getElementById('oracleInput');
+const hall = document.getElementById('hallCell');
+
+function renderSet() {
+    const flat = SET.base.flat();
+    document.querySelectorAll('.set-cell').forEach((c, i) => c.textContent = flat[i]);
+    hall.textContent = SET.hall();
+}
+
+function essence(v) {
+    return isNaN(v) ? [...v].reduce((a,c) => a + c.charCodeAt(0), 0) : Number(v);
+}
+
+function fmt(r) {
+    const L = [];
+    L.push(`◈ ORAKEL · ${new Date().toLocaleTimeString()}`);
+    if (r.qi) {
+        L.push(`├─ QI/IQQ: ${r.qi.path || 'offen'}`);
+        L.push(`│  └─ 243: ${r.qi.is243 ? 'erreicht' : 'offen'}`);
     }
-
-    // ─────────────────────────────────────────────
-    // Orakel-Abfrage
-    // ─────────────────────────────────────────────
-    function ask() {
-        const raw = inp.value.trim();
-        if (!raw) return out.textContent = '⚠️ Eingabe fehlt.';
-
-        const num = essence(raw);
-
-        const station = {
-            name: "SYNCCORE-Station",
-            uptime: 0.91,
-            signal: 0.87,
-            response: 0.94,
-            sync: 0.79,
-            load: 0.33,
-            errors: 1
-        };
-
-        try {
-            const r = syncQiIqqWith81(num, station);
-            out.textContent = fmt(r);
-            hallResonance(r.find81?.find81?.is243);
-        } catch (e) {
-            out.textContent = `❌ Fehler: ${e.message}`;
+    const f = r.find81;
+    if (f) {
+        L.push(`├─ 81-Findung: ${f.find81.count}/3`);
+        if (f.find81.is243) L.push(`│  └─ 243 erreicht`);
+        L.push(`├─ Station: ${f.station.station} → ${f.station.percent}%`);
+        L.push(`│  └─ ${f.station.status}`);
+        if (f.beneficial.length) {
+            L.push(`├─ Begünstigung:`);
+            f.beneficial.forEach(b => L.push(`│  • ${b}`));
         }
     }
+    L.push(`└─ Status: ${r.status || 'offen'}`);
+    return L.join('\n');
+}
 
-    // ─────────────────────────────────────────────
-    // Events
-    // ─────────────────────────────────────────────
-    document.getElementById('askBtn').onclick = ask;
+function hallResonance(is243) {
+    hall.style.background = is243 ? '#1e3a3a' : '#1e2a2a';
+    hall.style.color = is243 ? '#b0f0f0' : '#aadddd';
+    hall.style.borderColor = is243 ? '#4a8a8a' : '#3a5a5a';
+}
 
-    document.getElementById('resetBtn').onclick = () => {
-        inp.value = '81';
-        out.innerHTML = '<span class="meta">// zurückgesetzt …</span>';
-        renderSet();
-        hallResonance(false);
+function ask() {
+    const raw = inp.value.trim();
+    if (!raw) return out.textContent = '⚠️ Eingabe fehlt.';
+    const num = essence(raw);
+    const station = {
+        name: "SYNCCORE-Station",
+        uptime: 0.91, signal: 0.87, response: 0.94, sync: 0.79, load: 0.33, errors: 1
     };
+    try {
+        const r = syncQiIqqWith81(num, station);
+        out.textContent = fmt(r);
+        hallResonance(r.find81?.find81?.is243);
+    } catch (e) {
+        out.textContent = `❌ Fehler: ${e.message}`;
+    }
+}
 
-    inp.addEventListener('keydown', e => {
-        if (e.key === 'Enter') ask();
-    });
-
-    // ─────────────────────────────────────────────
-    // Init
-    // ─────────────────────────────────────────────
+// ─── Events ───
+document.getElementById('askBtn').onclick = ask;
+document.getElementById('resetBtn').onclick = () => {
+    inp.value = '81';
+    out.innerHTML = '<span style="color:#6a7a7a;">// zurückgesetzt …</span>';
     renderSet();
-    out.innerHTML = `<span class="meta">// Orakel bereit. Stelle deine Frage.</span>`;
-<script type="module">
-import { ORAKEL_CORE } from "./orakel.core.js";
-import { ORAKEL_SET } from "./set.orakel.js";
-
-const frageInput = document.getElementById("frage");
-const output = document.getElementById("output");
-
-document.getElementById("run").onclick = () => {
-    const val = frageInput.value || "81";
-    const result = ORAKEL_CORE(val);
-    output.textContent = JSON.stringify(result, null, 2);
+    hallResonance(false);
 };
+inp.addEventListener('keydown', e => { if (e.key === 'Enter') ask(); });
 
-document.getElementById("reset").onclick = () => {
-    const result = ORAKEL_SET();
-    output.textContent = JSON.stringify(result, null, 2);
+// ─── Ninja ───
+window.NINJA = {
+    ask() { document.getElementById('askBtn')?.click(); },
+    reset() { document.getElementById('resetBtn')?.click(); }
 };
+document.addEventListener('keydown', e => {
+    if (e.key === 'q') window.NINJA.ask();
+    if (e.key === 'r') window.NINJA.reset();
+});
 
-    // Ninja-Knopf-System
-    window.NINJA = {
-        ask() {
-            const btn = document.getElementById('askBtn');
-            if (btn) btn.click();
-        },
-        reset() {
-            const btn = document.getElementById('resetBtn');
-            if (btn) btn.click();
-        }
-    };
-
-    // Globale Hotkeys
-    document.addEventListener('keydown', e => {
-        if (e.key === 'q') NINJA.ask();     // q = Frage stellen
-        if (e.key === 'r') NINJA.reset();   // r = Reset
-    });
+// ─── Init ───
+renderSet();
+out.innerHTML = '<span style="color:#6a7a7a;">// Orakel bereit. Stelle deine Frage.</span>';
 </script>
-
 
 </body>
 </html>
