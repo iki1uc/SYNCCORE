@@ -2,43 +2,53 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>SYNCCORE · Station</title>
+    <title>SYNCCORE · Slide · Shuffle</title>
 
     <style>
         body {
-            background: #0d0d0d;
-            color: #e8e8e8;
+            background: #0f0f0f;
+            color: #e6e6e6;
             font-family: monospace;
             text-align: center;
-            padding-top: 12vh;
+            padding-top: 14vh;
             letter-spacing: 0.06em;
         }
 
-        #sync {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            opacity: 0.92;
+        #slide {
+            font-size: 2rem;
+            opacity: 0.9;
+            animation: slide 3s infinite ease-in-out;
         }
 
-        #note {
-            font-size: 1rem;
+        #shuffle {
+            font-size: 1.2rem;
             opacity: 0.7;
+            margin-top: 2rem;
+            animation: shuffle 2.4s infinite ease-in-out;
         }
 
-        .marker {
-            margin-top: 3.5rem;
-            font-size: 1.3rem;
-            opacity: 0.8;
+        @keyframes slide {
+            0%   { transform: translateY(0); }
+            25%  { transform: translateY(-12px); }
+            50%  { transform: translateY(12px); }
+            75%  { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes shuffle {
+            0%   { transform: translateX(0); }
+            25%  { transform: translateX(10px); }
+            50%  { transform: translateX(-10px); }
+            75%  { transform: translateX(6px); }
+            100% { transform: translateX(0); }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="sync">SYNCCORE</div>
-    <div id="note">vorläufige Station · Kern · fluid</div>
-
-    <div class="marker">◉ Verbindung · Stammform · Ruhepunkt</div>
+    <div id="slide">lerSETI → SETIler → argeupheria</div>
+    <div id="shuffle">Domino · Tanz · Rhythmus · Wette</div>
 
 </body>
 </html>
