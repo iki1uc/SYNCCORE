@@ -1,6 +1,27 @@
-// SET.js (NEU · FINAL)
-import { RealityPulse } from "./RealityPulse.js";
+const SET = {
+    base: [
+        ["a","b","c"],
+        ["d","e","f"],
+        ["g","h","i"]
+    ],
 
-export function SET(current, tick){
-    return RealityPulse(current, tick);
-}
+    up() {
+        return this.base.slice().reverse();
+    },
+
+    down() {
+        return this.base.slice();
+    },
+
+    hall() {
+        return this.base[1][1]; // e
+    },
+
+    expand() {
+        const up = this.up();
+        const mid = this.base;
+        const down = this.down();
+
+        return [...up, ...mid, ...down];
+    }
+};
