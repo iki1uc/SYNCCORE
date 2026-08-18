@@ -25,3 +25,19 @@ const SET = {
         return [...up, ...mid, ...down];
     }
 };
+const lerSETI = {
+    name: "lerSETI",
+    role: "entry",
+    state: "fluid",
+    receive(input) {
+        return { from: "entry", payload: input };
+    }
+};
+const argeupheria = {
+    name: "argeupheria",
+    role: "meta-field",
+    state: "open",
+    absorb(input) {
+        return { absorbed: input, layer: "argeupheria" };
+    }
+};
