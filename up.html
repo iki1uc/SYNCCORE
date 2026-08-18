@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>up · SYNCCORE</title>
 
+    <style>
+        body {
+            background: #0f0f0f;
+            color: #e6e6e6;
+            font-family: monospace;
+            text-align: center;
+            padding-top: 18vh;
+            letter-spacing: 0.06em;
+        }
+
+        #up {
+            font-size: 2rem;
+            opacity: 0.9;
+            animation: rise 3s infinite ease-in-out;
+        }
+
+        #text {
+            margin-top: 2rem;
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        @keyframes rise {
+            0%   { transform: translateY(0); }
+            50%  { transform: translateY(-14px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="up">▲ up</div>
+    <div id="text">
+        Ein leichter Aufwärts‑Impuls.<br>
+        Kein Anfang. Kein Ende.<br>
+        Nur Streben.<br>
+        Eine Bewegung nach oben,<br>
+        die zeigt, dass
